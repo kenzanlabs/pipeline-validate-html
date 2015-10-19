@@ -1,0 +1,8 @@
+bower_components
+node_modules
+docs
+reports
+*.log
+test-results.xml
+.idea/
+
