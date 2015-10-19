@@ -1,0 +1,49 @@
+{
+  "name": "pipeline-validate-html",
+  "version": "0.1.0-SNAPSHOT",
+  "description": "Gulp pipeline to validate html files",
+  "author": "Ben McOsker <bmcosker@kenzan.com> (https://github.com/benmcosker)",
+  "contributors": [
+    {
+      "name": "Owen Buckley",
+      "email": "obuckley@kenzan.com"
+    },
+    {
+      "name": "Chris Sharon",
+      "email": "csharon@kenzan.com"
+    },
+    {
+      "name": "Juan P. Osorio",
+      "email": "jposorio@kenzan.com"
+    }
+  ],
+  "scripts": {
+  },
+  "main": "src/index.js",
+  "repository": {
+    "type": "git",
+    "url": "ssh://git@github.com:kenzanmedia/pipeline-validate-css.git"
+  },
+  "keywords": [
+    "Gulp",
+    "Tools",
+    "Keystone",
+    "Pipeline",
+    "HTML"
+  ],
+  "preferGlobal": false,
+  "private": false,
+  "publishConfig": {
+    "registry": ""
+  },
+  "engines": {
+    "node": ">=0.10.3",
+    "npm": ">=1.0.20"
+  },
+  "analyze": true,
+  "license": "Apache-2.0",
+  "dependencies": {
+  },
+  "devDependencies": {
+  }
+}
