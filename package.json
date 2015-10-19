@@ -43,7 +43,9 @@
   "analyze": true,
   "license": "Apache-2.0",
   "dependencies": {
+    "gulp": "^3.9.0"
   },
   "devDependencies": {
+    "gulp": "^3.9.0"
   }
 }
