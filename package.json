@@ -1,6 +1,6 @@
 {
   "name": "pipeline-validate-html",
-  "version": "0.1.0-SNAPSHOT",
+  "version": "0.1.0",
   "description": "Gulp pipeline to validate html files",
   "author": "Ben McOsker <bmcosker@kenzan.com> (https://github.com/benmcosker)",
   "contributors": [
@@ -15,10 +15,13 @@
     {
       "name": "Juan P. Osorio",
       "email": "jposorio@kenzan.com"
+    },
+    {
+      "name": "Paul Barry",
+      "email": "pbarry@kenzan.com"
     }
   ],
-  "scripts": {
-  },
+  "scripts": {},
   "main": "src/index.js",
   "repository": {
     "type": "git",
@@ -43,7 +46,21 @@
   "analyze": true,
   "license": "Apache-2.0",
   "dependencies": {
+    "gulp-htmlhint": "0.3.1",
+    "lazypipe": "1.0.1",
+    "pipeline-handyman": "1.0.0"
   },
   "devDependencies": {
+    "chai": "3.3.0",
+    "dirty-chai": "1.2.2",
+    "gulp": "3.9.1",
+    "isstream": "0.1.2",
+    "pipeline-test-node": "1.0.1",
+    "pipeline-validate-js": "1.0.0-rc4",
+    "rimraf": "2.5.4",
+    "sinon": "1.17.3",
+    "sinon-chai": "2.8.0",
+    "vinyl-buffer": "1.0.0",
+    "vinyl-source-stream": "1.1.0"
   }
 }
