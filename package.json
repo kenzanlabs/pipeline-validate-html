@@ -21,7 +21,9 @@
       "email": "pbarry@kenzan.com"
     }
   ],
-  "scripts": {},
+  "scripts": {
+    "build": "./node_modules/.bin/gulp build"
+  },
   "main": "src/index.js",
   "repository": {
     "type": "git",
