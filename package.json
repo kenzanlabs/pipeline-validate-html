@@ -58,7 +58,7 @@
     "gulp": "3.9.1",
     "isstream": "0.1.2",
     "pipeline-test-node": "1.0.1",
-    "pipeline-validate-js": "1.0.0-rc4",
+    "pipeline-validate-js": "1.0.0",
     "rimraf": "2.5.4",
     "sinon": "1.17.3",
     "sinon-chai": "2.8.0",
