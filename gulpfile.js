@@ -9,29 +9,19 @@ var config = {
     'src/*.js',
     'test/**/*.js',
     'test/*.js'
-  ],
-  test: {
-    plugins: {
-      istanbul: {
-        thresholds: {
-          global: 80
-        }
-      }
-    }
-  }
-
+  ]
 };
 
-gulp.task('lint:js', function() {
+gulp.task('lint:js', function () {
   return gulp
     .src(config.jsfiles)
     .pipe(validateJSPipeline.validateJS());
 });
 
-gulp.task('test', ['lint:js'], function() {
+gulp.task('test', ['lint:js'], function () {
   return gulp
     .src(config.jsfiles)
-    .pipe(testPipeline.test(config.test));
+    .pipe(testPipeline.test());
 });
 
 gulp.task('build', ['test']);
