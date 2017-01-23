@@ -1,4 +1,4 @@
-# Contributing to pipeline-validate-js
+# Contributing to pipeline-validate-html
 As this project is governed under the [Keystone][] project, please make sure you have reviewed the contributing guidelines
 [there].
 
