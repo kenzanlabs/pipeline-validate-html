@@ -1,23 +1,21 @@
 'use strict';
 
-var htmlhint = require('gulp-htmlhint');
+var htmllint = require('gulp-htmllint');
 var lazypipe = require('lazypipe');
 
 module.exports = {
 
-  validateHTML: function () {
-    return pipelineFactory();
+  validateHTML: function (options) {
+    return pipelineFactory(options);
   }
 
 };
 
-function pipelineFactory () {
+function pipelineFactory (options) {
   var stream;
 
   stream = lazypipe()
-    .pipe(htmlhint)
-    .pipe(htmlhint.reporter)
-    .pipe(htmlhint.failReporter);
+    .pipe(htmllint, options);
 
   return stream();
 }

@@ -5,11 +5,12 @@ var sinon = require('sinon');
 var sinonChai = require('sinon-chai');
 var dirtyChai = require('dirty-chai');
 var isStream = require('isstream');
-var htmlhint = require('gulp-htmlhint');
 var fs = require('fs');
 var path = require('path');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
+
+var gutil = require('gulp-util');
 
 var expect = chai.expect;
 
@@ -32,36 +33,23 @@ describe('pipeline-validate-html', function () {
       expect(isStream(validateHTMLPipeline.validateHTML())).to.be.true();
     });
 
-    it('should ensure that the output reporter is used', function () {
-      var spy = sinon.spy(htmlhint, 'reporter');
-
-      validateHTMLPipeline.validateHTML();
-
-      expect(spy).to.have.been.called();
-
-      htmlhint.reporter.restore();
-    });
-
-    it('should ensure that the fail reporter is used', function () {
-      var spy = sinon.spy(htmlhint, 'failReporter');
-
-      validateHTMLPipeline.validateHTML();
-
-      expect(spy).to.have.been.called();
-
-      htmlhint.failReporter.restore();
-    });
-
     describe('validateHTML implementation', function () {
 
-      it('should output an error when an invalid HTML file is found', function (done) {
+      it('should output an error via gulp-util when an invalid HTML file is found', function (done) {
+
+        /*
+        gulp-htmllint uses gulp-util internally to output the error messages.
+        We stub the log method to A) verify it has been called; B) return an empty array to reduce output during testing
+         */
+        var spy = sinon.stub(gutil, 'log').returns([]);
 
         fs.createReadStream(path.join(process.cwd(), '/test/fixtures/invalid-html.html'))
           .pipe(source('invalid-html.html'))
           .pipe(buffer())
           .pipe(validateHTMLPipeline.validateHTML())
-          .on('error', function (err) {
-            expect(err.message).to.contain('errors found');
+          .on('finish', function () {
+            expect(spy).to.have.been.called();
+            expect(spy.getCall(0).args[0]).to.match(/(line \d)\s(col \d)/);
 
             done();
           });
