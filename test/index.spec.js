@@ -42,14 +42,38 @@ describe('pipeline-validate-html', function () {
         We stub the log method to A) verify it has been called; B) return an empty array to reduce output during testing
          */
         var spy = sinon.stub(gutil, 'log').returns([]);
+        var fileName = 'invalid-html.html';
 
-        fs.createReadStream(path.join(process.cwd(), '/test/fixtures/invalid-html.html'))
-          .pipe(source('invalid-html.html'))
+        fs.createReadStream(path.join(process.cwd(), '/test/fixtures/', fileName))
+          .pipe(source(fileName))
           .pipe(buffer())
           .pipe(validateHTMLPipeline.validateHTML())
           .on('finish', function () {
             expect(spy).to.have.been.called();
             expect(spy.getCall(0).args[0]).to.match(/(line \d)\s(col \d)/);
+
+            gutil.log.restore();
+
+            done();
+          });
+
+      });
+
+      it('should NOT output an error via gulp-util when a valid HTML file is found', function (done) {
+
+        /*
+         gulp-htmllint uses gulp-util internally to output the error messages.
+         We stub the log method to A) verify it has been called; B) return an empty array to reduce output during testing
+         */
+        var spy = sinon.stub(gutil, 'log').returns([]);
+        var fileName = 'valid-html.html';
+
+        fs.createReadStream(path.join(process.cwd(), '/test/fixtures/', fileName))
+          .pipe(source(fileName))
+          .pipe(buffer())
+          .pipe(validateHTMLPipeline.validateHTML())
+          .on('finish', function () {
+            expect(spy).to.have.not.been.called();
 
             done();
           });
