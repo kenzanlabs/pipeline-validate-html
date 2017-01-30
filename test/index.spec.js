@@ -160,6 +160,23 @@ describe('pipeline-validate-html', function () {
 
       });
 
+      describe('validateHTML provided a custom file path', function () {
+
+        it('should replace the default path with the provide file path', function () {
+          var spy = sinon.spy(handyman, 'mergeConfig');
+          var customPathConfig = { config: 'custom/path/to/.htmllintrc' };
+
+          validateHTMLPipeline.validateHTML(customPathConfig);
+
+          expect(spy).to.have.been.calledOnce();
+          expect(spy.getCall(0).args[0].config).to.match(/node_modules\/pipeline-validate-html\/.htmllintrc/);
+          expect(spy.getCall(0).args[1].config).to.equal(customPathConfig.config);
+
+          handyman.mergeConfig.restore();
+        });
+
+      });
+
     });
 
   });
