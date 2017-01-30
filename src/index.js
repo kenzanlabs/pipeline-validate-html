@@ -63,6 +63,22 @@ function pipelineFactory (options) {
 
   }
 
+  var rules;
+
+  if (typeof options === 'object') {
+
+    rules = handyman.mergeConfig(retrieveDefaultOptions(), options);
+
+    options = handyman.mergeConfig(DEFAULT_OPTIONS, {
+      rules: rules,
+      config: null
+    });
+
+  } else {
+    options = DEFAULT_OPTIONS;
+
+  }
+
   stream = lazypipe()
     .pipe(htmllint, config);
 
