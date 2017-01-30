@@ -125,6 +125,17 @@ describe('pipeline-validate-html', function () {
           handyman.log.restore();
         });
 
+        it('should output a message when the default config file does not exist', function () {
+          var spy = sinon.stub(handyman, 'log');
+
+          // remove the generated mock to simulate non-existence
+          rimraf.sync(nodePath);
+
+          validateHTMLPipeline.validateHTML(customConfig);
+
+          expect(spy).to.have.been.calledWithMatch('Could not retrieve default options from included config file at');
+        });
+
         it('should format the provided options to the default options structure', function () {
           var spy = sinon.spy(handyman, 'mergeConfig');
 
