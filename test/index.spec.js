@@ -25,7 +25,7 @@ describe('pipeline-validate-html', function () {
 
   var nodePath;
 
-  before(function (done) {
+  beforeEach(function (done) {
     /*
      To mimic an environment in which this pipeline will be used,
      it's necessary to have a "node_modules/pipeline-validate-html/" directory with a .htmllintrc file.
@@ -39,11 +39,16 @@ describe('pipeline-validate-html', function () {
 
     if (!fs.existsSync(nodePath)) {
       fs.mkdirSync(nodePath);
+
+      fs.createReadStream(localPath + '/.htmllintrc')
+        .pipe(fs.createWriteStream(nodePath + '/.htmllintrc'))
+        .on('finish', done);
+
+    } else {
+      done();
+
     }
 
-    fs.createReadStream(localPath + '/.htmllintrc')
-      .pipe(fs.createWriteStream(nodePath + '/.htmllintrc'))
-      .on('finish', done);
   });
 
   after(function () {
@@ -123,6 +128,17 @@ describe('pipeline-validate-html', function () {
             'attr-name-style': 'dash'
           };
 
+        });
+
+        it('should output a message when the default config file does not exist', function () {
+          var spy = sinon.stub(handyman, 'log');
+
+          // remove the generated mock to simulate non-existence
+          rimraf.sync(nodePath);
+
+          validateHTMLPipeline.validateHTML(customConfig);
+
+          expect(spy).to.have.been.calledWithMatch('Could not retrieve default options from included config file at');
         });
 
         it('should format the provided options to the default options structure', function () {

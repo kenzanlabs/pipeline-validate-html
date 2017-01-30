@@ -54,7 +54,7 @@ function retrieveDefaultOptions () {
     defaultOptions = JSON.parse(fs.readFileSync(DEFAULT_PATH, 'utf-8'));
 
   } catch (ex) {
-    handyman.log('Could not retrieve default options from included config file at %s.', DEFAULT_PATH);
+    handyman.log('Could not retrieve default options from included config file at ' + DEFAULT_PATH);
 
   }
 
