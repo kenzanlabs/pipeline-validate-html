@@ -24,31 +24,28 @@ module.exports = {
 
 function pipelineFactory (options) {
   var stream;
-  var rules;
+  var config = {};
 
   if (typeof options === 'object') {
 
     if (options.rules) {
-      rules = handyman.mergeConfig(retrieveDefaultOptions(), options.rules);
+      config.rules = handyman.mergeConfig(retrieveDefaultOptions(), options.rules);
+      config.config = null;
 
-      options = handyman.mergeConfig(DEFAULT_CONFIG, {
-        rules: rules,
-        config: null
-      });
+      config = handyman.mergeConfig(DEFAULT_CONFIG, config);
 
     } else if (options.config) {
-      options = handyman.mergeConfig(DEFAULT_CONFIG, {
-        config: options.config
-      });
+      config = handyman.mergeConfig(DEFAULT_CONFIG, options);
+
     }
 
   } else {
-    options = DEFAULT_CONFIG;
+    config = DEFAULT_CONFIG;
 
   }
 
   stream = lazypipe()
-    .pipe(htmllint, options);
+    .pipe(htmllint, config);
 
   return stream();
 }
