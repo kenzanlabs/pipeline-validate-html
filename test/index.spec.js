@@ -125,7 +125,9 @@ describe('pipeline-validate-html', function () {
 
         beforeEach(function () {
           customConfig = {
-            'attr-name-style': 'dash'
+            rules: {
+              'attr-name-style': 'dash'
+            }
           };
 
         });
@@ -149,9 +151,9 @@ describe('pipeline-validate-html', function () {
           expect(spy).to.have.been.calledTwice();
 
           expect(spy.getCall(0).args[0]['attr-name-style']).to.equal('lowercase');
-          expect(spy.getCall(0).args[1]).to.eql(customConfig);
+          expect(spy.getCall(0).args[1]).to.eql(customConfig.rules);
 
-          expect(spy.getCall(1).args[1].rules['attr-name-style']).to.equal(customConfig['attr-name-style']);
+          expect(spy.getCall(1).args[1].rules['attr-name-style']).to.equal(customConfig.rules['attr-name-style']);
 
           handyman.mergeConfig.restore();
         });
