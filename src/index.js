@@ -67,15 +67,18 @@ function pipelineFactory (options) {
 
   if (typeof options === 'object') {
 
-    rules = handyman.mergeConfig(retrieveDefaultOptions(), options);
+    rules = handyman.mergeConfig(retrieveDefaultOptions(), options.rules);
 
-    options = handyman.mergeConfig(DEFAULT_OPTIONS, {
+    options = handyman.mergeConfig(DEFAULT_CONFIG, {
       rules: rules,
       config: null
     });
 
+  } else if (typeof options === 'string') {
+    // NOOP
+
   } else {
-    options = DEFAULT_OPTIONS;
+    options = DEFAULT_CONFIG;
 
   }
 
