@@ -25,21 +25,22 @@ module.exports = {
 function pipelineFactory (options) {
   var stream;
   var config = {};
+  var customRules;
 
   if (typeof options === 'object') {
 
-    if (typeof options.rules === 'object' && !Array.isArray(options.rules)) {
-      config.rules = handyman.mergeConfig(retrieveDefaultOptions(), options.rules);
-      config.config = null;
-
-      config = handyman.mergeConfig(DEFAULT_CONFIG, config);
-
-    } else if (typeof options.config === 'string') {
-      config = handyman.mergeConfig(DEFAULT_CONFIG, options);
-
-    } else if (options.rules && options.config) {
+    if (typeof options.rules === 'object' && typeof options.config === 'string') {
       // validate that rules is not empty
       // validate that config is a string
+
+      try {
+        customRules = fs.readFileSync(options.config, 'utf8');
+
+      } catch (ex) {
+        console.log('EX'); // eslint-disable-line
+        handyman.log('Could not retrieve custom options from included config file at ' + options.config);
+
+      }
 
       // retrieve default options to start
       // retrieve custom config options and merge in
@@ -47,6 +48,19 @@ function pipelineFactory (options) {
       // custom rules take precedent
 
       // pass to stream
+    } else {
+
+      if (typeof options.rules === 'object' && !Array.isArray(options.rules)) {
+        config.rules = handyman.mergeConfig(retrieveDefaultRules(), options.rules);
+        config.config = null;
+
+        config = handyman.mergeConfig(DEFAULT_CONFIG, config);
+
+      } else if (typeof options.config === 'string') {
+        config = handyman.mergeConfig(DEFAULT_CONFIG, options);
+
+      }
+
     }
 
   } else {
@@ -60,11 +74,12 @@ function pipelineFactory (options) {
   return stream();
 }
 
-function retrieveDefaultOptions () {
+function retrieveDefaultRules () {
   var defaultOptions = {};
 
   try {
-    defaultOptions = JSON.parse(fs.readFileSync(DEFAULT_RULES_PATH, 'utf-8'));
+    console.log(DEFAULT_RULES_PATH); // eslint-disable-line
+    defaultOptions = JSON.parse(fs.readFileSync(DEFAULT_RULES_PATH, 'utf8'));
 
   } catch (ex) {
     handyman.log('Could not retrieve default options from included config file at ' + DEFAULT_RULES_PATH);

@@ -44,11 +44,6 @@ describe('pipeline-validate-html', function () {
         .pipe(fs.createWriteStream(nodePath + '/.htmllintrc'))
         .on('finish', done);
 
-    } else {
-      done();
-
-    }
-
   });
 
   after(function () {
@@ -154,6 +149,8 @@ describe('pipeline-validate-html', function () {
           validateHTMLPipeline.validateHTML(customConfig);
 
           expect(spy).to.have.been.calledWithMatch('Could not retrieve default options from included config file at');
+
+          handyman.log.restore();
         });
 
         it('should format the provided options to the default options structure', function () {
@@ -213,6 +210,42 @@ describe('pipeline-validate-html', function () {
 
       });
 
+      describe('validateHTML provided custom rules AND a custom file path', function () {
+
+        // it.only('should output a message when the custom config file does not exist', function () {
+        //   var spy = sinon.spy(handyman, 'log');
+        //   var customFilePath = 'custom/path/to/config/.htmllintrc';
+        //
+        //   sinon.stub(fs, 'readFileSync')
+        //     .withArgs(customFilePath, 'utf8')
+        //     .throws();
+        //
+        //   validateHTMLPipeline.validateHTML({
+        //     config: customFilePath,
+        //     rules: {}
+        //   });
+        //
+        //   expect(spy).to.have.been.calledWithMatch('Could not retrieve custom options from included config file at ');
+        //
+        //   handyman.log.restore();
+        // });
+
+        it('should retrieve the custom file rules', function () {
+          var customFilePath = 'custom/path/to/config/.htmllintrc';
+          var spy = sinon.stub(fs, 'readFileSync')
+            .withArgs(customFilePath, 'utf8')
+            .returns('{"rule": "value"}');
+
+          validateHTMLPipeline.validateHTML({
+            config: customFilePath,
+            rules: {}
+          });
+
+          expect(spy).to.have.been.calledWith(customFilePath, 'utf8');
+
+        });
+
+      });
     });
 
   });
