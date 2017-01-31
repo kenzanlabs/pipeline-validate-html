@@ -134,6 +134,8 @@ describe('pipeline-validate-html', function () {
           validateHTMLPipeline.validateHTML(customConfig);
 
           expect(spy).to.have.been.calledWithMatch('Could not retrieve default options from included config file at');
+
+          handyman.log.restore();
         });
 
         it('should format the provided options to the default options structure', function () {
