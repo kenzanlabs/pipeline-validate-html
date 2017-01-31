@@ -132,6 +132,19 @@ describe('pipeline-validate-html', function () {
 
         });
 
+        it('should NOT format the options when an invalid rules value is provided', function () {
+          var spy = sinon.spy(handyman, 'mergeConfig');
+          var invalidConfig = {
+            rules: []
+          };
+
+          validateHTMLPipeline.validateHTML(invalidConfig);
+
+          expect(spy).to.have.not.been.called();
+
+          handyman.mergeConfig.restore();
+        });
+
         it('should output a message when the default config file does not exist', function () {
           var spy = sinon.stub(handyman, 'log');
 
@@ -158,9 +171,32 @@ describe('pipeline-validate-html', function () {
           handyman.mergeConfig.restore();
         });
 
+        it('should set the options.config property to null when a rules object is passed', function () {
+          var spy = sinon.spy(handyman, 'mergeConfig');
+
+          validateHTMLPipeline.validateHTML(customConfig);
+
+          expect(spy).to.have.been.calledTwice();
+
+          expect(spy.getCall(1).args[1].config).to.be.null();
+
+          handyman.mergeConfig.restore();
+        });
       });
 
       describe('validateHTML provided a custom file path', function () {
+
+        it('should NOT merge the options when the provided options.config value is not a string', function () {
+          var spy = sinon.spy(handyman, 'mergeConfig');
+          var invalidConfig = { config: {} };
+
+          validateHTMLPipeline.validateHTML(invalidConfig);
+
+          expect(spy).to.have.not.been.called();
+
+          handyman.mergeConfig.restore();
+
+        });
 
         it('should replace the default path with the provide file path', function () {
           var spy = sinon.spy(handyman, 'mergeConfig');
