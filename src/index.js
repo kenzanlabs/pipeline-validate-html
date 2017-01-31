@@ -67,15 +67,25 @@ function pipelineFactory (options) {
 
   if (typeof options === 'object') {
 
-    if (options.rules) {
+    if (typeof options.rules === 'object' && !Array.isArray(options.rules)) {
       config.rules = handyman.mergeConfig(retrieveDefaultOptions(), options.rules);
       config.config = null;
 
       config = handyman.mergeConfig(DEFAULT_CONFIG, config);
 
-    } else if (options.config) {
+    } else if (typeof options.config === 'string') {
       config = handyman.mergeConfig(DEFAULT_CONFIG, options);
 
+    } else if (options.rules && options.config) {
+      // validate that rules is not empty
+      // validate that config is a string
+
+      // retrieve default options to start
+      // retrieve custom config options and merge in
+      // merge in custom rules config
+      // custom rules take precedent
+
+      // pass to stream
     }
 
   } else {
