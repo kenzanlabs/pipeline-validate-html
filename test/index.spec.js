@@ -193,8 +193,8 @@ describe('pipeline-validate-html', function () {
       describe('validateHTML provided custom rules AND a custom file path', function () {
 
         it('should output a message when the custom config file does not exist', function () {
-          var spy = sinon.spy(handyman, 'log');
           var customFilePath = 'custom/path/to/config/.htmllintrc';
+          var spy = sinon.stub(handyman, 'log').returns(undefined);
 
           readFileStub
             .withArgs(customFilePath, 'utf8')
@@ -215,7 +215,7 @@ describe('pipeline-validate-html', function () {
 
           readFileStub
             .withArgs(customFilePath, 'utf8')
-            .returns('"attr-name-style": "dash"');
+            .returns('{"attr-name-style": "dash"}');
 
           validateHTMLPipeline.validateHTML({
             config: customFilePath,
@@ -225,6 +225,10 @@ describe('pipeline-validate-html', function () {
           expect(readFileStub).to.have.been.calledWith(customFilePath, 'utf8');
 
         });
+
+        it('should retain the default rule value when NOT overwritten by a custom file rule or provided rule ');
+        it('should overwrite the default rule by the custom file rile');
+        it('should overwrite the custom file rule by a provided rule');
 
       });
     });
