@@ -24,13 +24,7 @@ chai.use(dirtyChai);
 describe('pipeline-validate-html', function () {
 
   beforeEach(function () {
-    readFileStub = readFileStub || sinon.stub(fs, 'readFileSync')
-      // .withArgs(path.join(process.cwd(), 'node_modules/pipeline-validate-html/.htmllintrc'))
-        .returns('{"attr-name-style": "lowercase"}');
-  });
-
-  afterEach(function () {
-    // readFileStub.parent.restore();
+    readFileStub = readFileStub || sinon.stub(fs, 'readFileSync').returns('{"attr-name-style": "lowercase"}');
   });
 
   describe('validateHTML Method', function () {
@@ -239,10 +233,8 @@ describe('pipeline-validate-html', function () {
 
           expect(spy).to.have.been.calledWith(JSON.parse(customFileRules), customProvidedRules);
 
+          handyman.mergeConfig.restore();
         });
-
-        it('should retain the default rule value when NOT overwritten by a custom file rule or provided rule ');
-        it('should overwrite the default rule by the custom file rile');
 
       });
     });

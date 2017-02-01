@@ -33,13 +33,12 @@ function pipelineFactory (options) {
 
       try {
         customRules = JSON.parse(fs.readFileSync(options.config, 'utf8'));
+        config = handyman.mergeConfig(retrieveDefaultRules(), handyman.mergeConfig(customRules, options.rules));
 
       } catch (ex) {
         handyman.log('Could not retrieve custom options from included config file at ' + options.config);
 
       }
-
-      config = handyman.mergeConfig(customRules, options.rules);
 
     } else {
 
