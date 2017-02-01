@@ -7,7 +7,6 @@ var dirtyChai = require('dirty-chai');
 var isStream = require('isstream');
 var fs = require('fs');
 var path = require('path');
-var rimraf = require('rimraf');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var handyman = require('pipeline-handyman');
