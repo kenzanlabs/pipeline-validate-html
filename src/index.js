@@ -72,20 +72,15 @@ function pipelineFactory (options) {
       // validate that config is a string
 
       try {
-        customRules = fs.readFileSync(options.config, 'utf8');
+        customRules = JSON.parse(fs.readFileSync(options.config, 'utf8'));
 
       } catch (ex) {
-        console.log('EX'); // eslint-disable-line
         handyman.log('Could not retrieve custom options from included config file at ' + options.config);
 
       }
 
-      // retrieve default options to start
-      // retrieve custom config options and merge in
-      // merge in custom rules config
-      // custom rules take precedent
+      config = handyman.mergeConfig(customRules, options.rules);
 
-      // pass to stream
     } else {
 
       if (typeof options.rules === 'object' && !Array.isArray(options.rules)) {
@@ -96,6 +91,9 @@ function pipelineFactory (options) {
 
       } else if (typeof options.config === 'string') {
         config = handyman.mergeConfig(DEFAULT_CONFIG, options);
+
+      } else {
+        config = DEFAULT_CONFIG;
 
       }
 
