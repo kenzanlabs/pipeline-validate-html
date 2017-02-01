@@ -192,23 +192,23 @@ describe('pipeline-validate-html', function () {
 
       describe('validateHTML provided custom rules AND a custom file path', function () {
 
-        // it.only('should output a message when the custom config file does not exist', function () {
-        //   var spy = sinon.spy(handyman, 'log');
-        //   var customFilePath = 'custom/path/to/config/.htmllintrc';
-        //
-        //   sinon.stub(fs, 'readFileSync')
-        //     .withArgs(customFilePath, 'utf8')
-        //     .throws();
-        //
-        //   validateHTMLPipeline.validateHTML({
-        //     config: customFilePath,
-        //     rules: {}
-        //   });
-        //
-        //   expect(spy).to.have.been.calledWithMatch('Could not retrieve custom options from included config file at ');
-        //
-        //   handyman.log.restore();
-        // });
+        it('should output a message when the custom config file does not exist', function () {
+          var spy = sinon.spy(handyman, 'log');
+          var customFilePath = 'custom/path/to/config/.htmllintrc';
+
+          readFileStub
+            .withArgs(customFilePath, 'utf8')
+            .throwsException();
+
+          validateHTMLPipeline.validateHTML({
+            config: customFilePath,
+            rules: {}
+          });
+
+          expect(spy).to.have.been.calledWithMatch('Could not retrieve custom options from included config file at ');
+
+          handyman.log.restore();
+        });
 
         it('should retrieve the custom file rules', function () {
           var customFilePath = 'custom/path/to/config/.htmllintrc';
