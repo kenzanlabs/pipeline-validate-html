@@ -7,7 +7,6 @@ var dirtyChai = require('dirty-chai');
 var isStream = require('isstream');
 var fs = require('fs');
 var path = require('path');
-var rimraf = require('rimraf');
 var source = require('vinyl-source-stream');
 var buffer = require('vinyl-buffer');
 var handyman = require('pipeline-handyman');
@@ -17,42 +16,21 @@ var gutil = require('gulp-util');
 var expect = chai.expect;
 
 var validateHTMLPipeline = require('../src/index');
+var readFileStub;
 
 chai.use(sinonChai);
 chai.use(dirtyChai);
 
 describe('pipeline-validate-html', function () {
 
-  var nodePath;
-
-  beforeEach(function (done) {
-    /*
-     To mimic an environment in which this pipeline will be used,
-     it's necessary to have a "node_modules/pipeline-validate-html/" directory with a .htmllintrc file.
-     To ensure this file exists, a simple stream is used to generate the file in
-     the appropriate location.
-     */
-
-    var localPath = path.join(process.cwd());
-
-    nodePath = path.join(process.cwd(), 'node_modules/pipeline-validate-html/');
-
-    if (!fs.existsSync(nodePath)) {
-      fs.mkdirSync(nodePath);
-
-      fs.createReadStream(localPath + '/.htmllintrc')
-        .pipe(fs.createWriteStream(nodePath + '/.htmllintrc'))
-        .on('finish', done);
-
+  beforeEach(function () {
+    readFileStub = readFileStub || sinon.stub(fs, 'readFileSync')
+      // .withArgs(path.join(process.cwd(), 'node_modules/pipeline-validate-html/.htmllintrc'))
+        .returns('{"attr-name-style": "lowercase"}');
   });
 
-  after(function () {
-    /*
-     Delete temporary pipeline-validate-css directory after testing is complete.
-     */
-    if (fs.existsSync(nodePath)) {
-      rimraf.sync(nodePath);
-    }
+  afterEach(function () {
+    // readFileStub.parent.restore();
   });
 
   describe('validateHTML Method', function () {
@@ -143,8 +121,7 @@ describe('pipeline-validate-html', function () {
         it('should output a message when the default config file does not exist', function () {
           var spy = sinon.stub(handyman, 'log');
 
-          // remove the generated mock to simulate non-existence
-          rimraf.sync(nodePath);
+          readFileStub.throwsException(); // eslint-disable-line
 
           validateHTMLPipeline.validateHTML(customConfig);
 
@@ -155,6 +132,8 @@ describe('pipeline-validate-html', function () {
 
         it('should format the provided options to the default options structure', function () {
           var spy = sinon.spy(handyman, 'mergeConfig');
+
+          readFileStub.returns('{"attr-name-style": "lowercase"}');
 
           validateHTMLPipeline.validateHTML(customConfig);
 
@@ -179,6 +158,7 @@ describe('pipeline-validate-html', function () {
 
           handyman.mergeConfig.restore();
         });
+
       });
 
       describe('validateHTML provided a custom file path', function () {
@@ -232,16 +212,17 @@ describe('pipeline-validate-html', function () {
 
         it('should retrieve the custom file rules', function () {
           var customFilePath = 'custom/path/to/config/.htmllintrc';
-          var spy = sinon.stub(fs, 'readFileSync')
+
+          readFileStub
             .withArgs(customFilePath, 'utf8')
-            .returns('{"rule": "value"}');
+            .returns('"attr-name-style": "dash"');
 
           validateHTMLPipeline.validateHTML({
             config: customFilePath,
             rules: {}
           });
 
-          expect(spy).to.have.been.calledWith(customFilePath, 'utf8');
+          expect(readFileStub).to.have.been.calledWith(customFilePath, 'utf8');
 
         });
 
