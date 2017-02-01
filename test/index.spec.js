@@ -191,9 +191,17 @@ describe('pipeline-validate-html', function () {
       });
 
       describe('validateHTML provided custom rules AND a custom file path', function () {
+        var customFilePath = 'custom/path/to/config/.htmllintrc';
+        var customFileRules = '{"attr-name-style": "dash"}';
+        var customProvidedRules = { 'attr-name-style': 'underscore' };
+
+        beforeEach(function () {
+          readFileStub
+            .withArgs(customFilePath, 'utf8')
+            .returns(customFileRules);
+        });
 
         it('should output a message when the custom config file does not exist', function () {
-          var customFilePath = 'custom/path/to/config/.htmllintrc';
           var spy = sinon.stub(handyman, 'log').returns(undefined);
 
           readFileStub
@@ -211,11 +219,6 @@ describe('pipeline-validate-html', function () {
         });
 
         it('should retrieve the custom file rules', function () {
-          var customFilePath = 'custom/path/to/config/.htmllintrc';
-
-          readFileStub
-            .withArgs(customFilePath, 'utf8')
-            .returns('{"attr-name-style": "dash"}');
 
           validateHTMLPipeline.validateHTML({
             config: customFilePath,
@@ -226,9 +229,20 @@ describe('pipeline-validate-html', function () {
 
         });
 
+        it('should overwrite the custom file rule by a provided rule', function () {
+          var spy = sinon.spy(handyman, 'mergeConfig');
+
+          validateHTMLPipeline.validateHTML({
+            config: customFilePath,
+            rules: customProvidedRules
+          });
+
+          expect(spy).to.have.been.calledWith(JSON.parse(customFileRules), customProvidedRules);
+
+        });
+
         it('should retain the default rule value when NOT overwritten by a custom file rule or provided rule ');
         it('should overwrite the default rule by the custom file rile');
-        it('should overwrite the custom file rule by a provided rule');
 
       });
     });
