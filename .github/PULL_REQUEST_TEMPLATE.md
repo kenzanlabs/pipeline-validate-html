@@ -10,8 +10,3 @@
 <!-- 
   Please provide the details of the changes being submitted with this PR.
 -->
-
-
-**Reviewers**
-
-@kenzanlabs/keystone-maintainers 
