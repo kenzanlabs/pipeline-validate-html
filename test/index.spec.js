@@ -81,6 +81,8 @@ describe('pipeline-validate-html', function () {
           .on('finish', function () {
             expect(spy).to.have.not.been.called();
 
+            gutil.log.restore();
+
             done();
           });
 
@@ -234,6 +236,53 @@ describe('pipeline-validate-html', function () {
           expect(spy).to.have.been.calledWith(JSON.parse(customFileRules), customProvidedRules);
 
           handyman.mergeConfig.restore();
+        });
+
+      });
+
+      describe('Partial HTML templates', function () {
+
+        it('should NOT output an error via gulp-util when a valid HTML partial is found', function (done) {
+          /*
+           gulp-htmllint uses gulp-util internally to output the error messages.
+           We stub the log method to A) verify it has been called; B) return an empty array to reduce output during testing
+           */
+          var spy = sinon.stub(gutil, 'log');
+          var fileName = 'valid-partial.html';
+
+          fs.createReadStream(path.join(process.cwd(), '/test/fixtures/', fileName))
+            .pipe(source(fileName))
+            .pipe(buffer())
+            .pipe(validateHTMLPipeline.validateHTML())
+            .on('finish', function () {
+              expect(spy).to.have.not.been.called();
+
+              gutil.log.restore();
+
+              done();
+            });
+        });
+
+        it('should output an error via gulp-util when an invalid HTML partial is found', function (done) {
+          /*
+           gulp-htmllint uses gulp-util internally to output the error messages.
+           We stub the log method to A) verify it has been called; B) return an empty array to reduce output during testing
+           */
+          var spy = sinon.stub(gutil, 'log');
+          var fileName = 'invalid-partial.html';
+
+          fs.createReadStream(path.join(process.cwd(), '/test/fixtures/', fileName))
+            .pipe(source(fileName))
+            .pipe(buffer())
+            .pipe(validateHTMLPipeline.validateHTML())
+            .on('finish', function () {
+              expect(spy).to.have.been.called();
+              expect(spy.getCall(0).args[0]).to.match(/(line \d)\s(col \d)/);
+
+              gutil.log.restore();
+
+              done();
+            });
         });
 
       });
