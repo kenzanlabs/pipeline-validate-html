@@ -63,47 +63,6 @@ function pipelineFactory (options) {
 
   }
 
-  var rules;
-
-  if (typeof options === 'object') {
-
-    if (typeof options.rules === 'object' && typeof options.config === 'string') {
-      // validate that rules is not empty
-      // validate that config is a string
-
-      try {
-        customRules = JSON.parse(fs.readFileSync(options.config, 'utf8'));
-
-      } catch (ex) {
-        handyman.log('Could not retrieve custom options from included config file at ' + options.config);
-
-      }
-
-      config = handyman.mergeConfig(customRules, options.rules);
-
-    } else {
-
-      if (typeof options.rules === 'object' && !Array.isArray(options.rules)) {
-        config.rules = handyman.mergeConfig(retrieveDefaultRules(), options.rules);
-        config.config = null;
-
-        config = handyman.mergeConfig(DEFAULT_CONFIG, config);
-
-      } else if (typeof options.config === 'string') {
-        config = handyman.mergeConfig(DEFAULT_CONFIG, options);
-
-      } else {
-        config = DEFAULT_CONFIG;
-
-      }
-
-    }
-
-  } else {
-    config = DEFAULT_CONFIG;
-
-  }
-
   stream = lazypipe()
     .pipe(htmllint, config);
 
